@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChatRoom, User } from '../types';
+import NewChatModal from './NewChatModal';
 import './ChatList.css';
 
 interface Props {
@@ -56,17 +57,40 @@ function EditIcon() {
 }
 
 export default function ChatList({ rooms, users, currentUser, selectedRoomId, onSelectRoom }: Props) {
+  
+  //새로운 채팅방 생성
+  const [isNewChatOpen, setIsNewChatOpen] = useState(false);
+  
+  //검색
   const [search, setSearch] = useState('');
 
   const getUser = (id: string) => users.find(u => u.id === id);
+  console.log("users",users);
   const getOtherUser = (room: ChatRoom) => {
     const otherId = room.members.find(id => id !== currentUser.id);
     return otherId ? getUser(otherId) : undefined;
   };
+  console.log("getOtherUser",getOtherUser);
 
   const filtered = search.trim()
-    ? rooms.filter(r => r.name.toLowerCase().includes(search.toLowerCase()))
-    : rooms;
+    ? rooms.filter(r => {
+
+        const keyword = search.toLowerCase();
+
+        //채팅방 이름
+        const roomMatch = r.name.toLowerCase().includes(search.toLowerCase());
+
+        //사용자 이름
+        const userMatch = r.members.some(function(userId) {
+          const user = getUser(userId);
+
+            return user !== undefined
+            && user.name.toLowerCase().includes(keyword);
+        });
+
+        return roomMatch || userMatch;
+      })
+      : rooms;
 
   const groupRooms = filtered.filter(r => r.type === 'group');
   const dmRooms = filtered.filter(r => r.type === 'direct');
@@ -126,7 +150,10 @@ export default function ChatList({ rooms, users, currentUser, selectedRoomId, on
     <div className="chat-list">
       <div className="cl-header">
         <h2 className="cl-title">메시지</h2>
-        <button className="cl-compose-btn" title="새 메시지">
+        <button className="cl-compose-btn" title="새 메시지"
+          onClick={function() {
+            setIsNewChatOpen(true);
+          }}>
           <EditIcon />
         </button>
       </div>
@@ -135,7 +162,7 @@ export default function ChatList({ rooms, users, currentUser, selectedRoomId, on
         <SearchIcon />
         <input
           type="text"
-          placeholder="채팅방 검색"
+          placeholder="검색"
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
@@ -161,6 +188,15 @@ export default function ChatList({ rooms, users, currentUser, selectedRoomId, on
           <div className="cl-empty">검색 결과가 없습니다</div>
         )}
       </div>
+
+      {isNewChatOpen && (
+        <NewChatModal
+          users = {users}
+          onClose = {function(){
+            setIsNewChatOpen(false);
+          }}
+          />
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview",
     "electron:dev": "concurrently -k -n VITE,ELECTRON -c cyan,yellow \"vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
     "electron:build": "cross-env ELECTRON_BUILD=true npm run build && electron-builder"
@@ -22,7 +23,14 @@
       "electron/**/*"
     ],
     "win": {
-      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "public/icon.ico"
     },
     "mac": {
@@ -48,8 +56,10 @@
     "cross-env": "^10.1.0",
     "electron": "^41.3.0",
     "electron-builder": "^26.8.1",
+    "gh-pages": "^6.3.0",
     "typescript": "^5.2.2",
     "vite": "^5.4.2",
     "wait-on": "^9.0.5"
-  }
+  },
+  "homepage": "https://hyeminSsong.github.io/chat-project"
 }

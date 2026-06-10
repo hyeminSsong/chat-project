@@ -17,9 +17,9 @@ function getRoomIdFromHash(): string | null {
 }
 
 // ── 패널 리사이즈 상수 ─────────────────────────────────────────────────────────
-const MIN_LIST_WIDTH = 220;
+const MIN_LIST_WIDTH = 400;
 const MAX_LIST_WIDTH = 560;
-const DEFAULT_LIST_WIDTH = 300;
+const DEFAULT_LIST_WIDTH = 500;
 
 // ── 최상위 라우터 ──────────────────────────────────────────────────────────────
 export default function App() {

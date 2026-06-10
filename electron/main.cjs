@@ -45,9 +45,9 @@ function loadWindow(win, roomId = null) {
 // 카카오톡 PC 앱과 유사한 좁고 긴 레이아웃
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 380,
+    width: 450,
     height: 720,
-    minWidth: 320,
+    minWidth: 380,
     minHeight: 500,
     title: '사내 메신저',
     webPreferences: {
@@ -80,9 +80,9 @@ function openChatWindow(roomId, roomName) {
   }
 
   const win = new BrowserWindow({
-    width: 380,
+    width: 450,
     height: 720,
-    minWidth: 320,
+    minWidth: 380,
     minHeight: 500,
     title: roomName,
     webPreferences: {
