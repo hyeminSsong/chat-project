@@ -1,4 +1,4 @@
-package com.example.chat.dto;
+package com.example.chat.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

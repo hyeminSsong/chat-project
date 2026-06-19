@@ -1,0 +1,128 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.5)
+
+2026-06-15T20:28:17.786+09:00  INFO 26944 --- [           main] com.example.chat.ChatApplication         : Starting ChatApplication v0.0.1-SNAPSHOT using Java 17.0.12 with PID 26944 (D:\chat-project\chat-api\build\libs\chat-api-0.0.1-SNAPSHOT.jar started by sesk in D:\chat-project\chat-api)
+2026-06-15T20:28:17.795+09:00  INFO 26944 --- [           main] com.example.chat.ChatApplication         : No active profile set, falling back to 1 default profile: "default"
+2026-06-15T20:28:18.436+09:00  INFO 26944 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-15T20:28:18.497+09:00  INFO 26944 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 54 ms. Found 1 JPA repository interface.
+2026-06-15T20:28:19.089+09:00  INFO 26944 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-15T20:28:19.103+09:00  INFO 26944 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-15T20:28:19.103+09:00  INFO 26944 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-15T20:28:19.141+09:00  INFO 26944 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-15T20:28:19.143+09:00  INFO 26944 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1266 ms
+2026-06-15T20:28:19.309+09:00  INFO 26944 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-15T20:28:19.367+09:00  INFO 26944 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-15T20:28:19.399+09:00  INFO 26944 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-15T20:28:19.619+09:00  INFO 26944 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-15T20:28:19.647+09:00  INFO 26944 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-15T20:28:19.869+09:00  INFO 26944 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@34aa8b61
+2026-06-15T20:28:19.871+09:00  INFO 26944 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-15T20:28:20.702+09:00  INFO 26944 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-15T20:28:20.705+09:00  INFO 26944 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-15T20:28:20.970+09:00  INFO 26944 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-15T20:28:21.860+09:00  INFO 26944 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-06-15T20:28:21.875+09:00  INFO 26944 --- [           main] com.example.chat.ChatApplication         : Started ChatApplication in 4.58 seconds (process running for 5.083)
+2026-06-15T20:28:36.200+09:00  INFO 26944 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-15T20:28:36.206+09:00  INFO 26944 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-15T20:28:36.208+09:00  INFO 26944 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+Hibernate: 
+    select
+        u1_0.user_id 
+    from
+        users u1_0
+Hibernate: 
+    select
+        distinct crm1_0.user_id 
+    from
+        chat_room_member crm1_0
+Hibernate: 
+    select
+        cr1_0.room_id,
+        coalesce(crm1_0.room_alias, cr1_0.room_name),
+        cr1_0.room_type_cd,
+        cr1_0.last_message_id,
+        cr1_0.last_sender_id,
+        cr1_0.last_send_dtm 
+    from
+        chat_room cr1_0 
+    join
+        chat_room_member crm1_0 
+            on cr1_0.room_id=crm1_0.room_id 
+    where
+        crm1_0.user_id=? 
+    order by
+        cr1_0.last_send_dtm desc nulls last
+Hibernate: 
+    select
+        cr1_0.room_id,
+        coalesce(crm1_0.room_alias, cr1_0.room_name),
+        cr1_0.room_type_cd,
+        cr1_0.last_message_id,
+        cr1_0.last_sender_id,
+        cr1_0.last_send_dtm 
+    from
+        chat_room cr1_0 
+    join
+        chat_room_member crm1_0 
+            on cr1_0.room_id=crm1_0.room_id 
+    where
+        crm1_0.user_id=? 
+    order by
+        cr1_0.last_send_dtm desc nulls last
+Hibernate: 
+    select
+        cr1_0.room_id,
+        coalesce(crm1_0.room_alias, cr1_0.room_name),
+        cr1_0.room_type_cd,
+        cr1_0.last_message_id,
+        cr1_0.last_sender_id,
+        cr1_0.last_send_dtm 
+    from
+        chat_room cr1_0 
+    join
+        chat_room_member crm1_0 
+            on cr1_0.room_id=crm1_0.room_id 
+    where
+        crm1_0.user_id=? 
+    order by
+        cr1_0.last_send_dtm desc nulls last
+Hibernate: 
+    select
+        cr1_0.room_id,
+        coalesce(crm1_0.room_alias, cr1_0.room_name),
+        cr1_0.room_type_cd,
+        cr1_0.last_message_id,
+        cr1_0.last_sender_id,
+        cr1_0.last_send_dtm 
+    from
+        chat_room cr1_0 
+    join
+        chat_room_member crm1_0 
+            on cr1_0.room_id=crm1_0.room_id 
+    where
+        crm1_0.user_id=? 
+    order by
+        cr1_0.last_send_dtm desc nulls last
+Hibernate: 
+    select
+        cr1_0.room_id,
+        coalesce(crm1_0.room_alias, cr1_0.room_name),
+        cr1_0.room_type_cd,
+        cr1_0.last_message_id,
+        cr1_0.last_sender_id,
+        cr1_0.last_send_dtm 
+    from
+        chat_room cr1_0 
+    join
+        chat_room_member crm1_0 
+            on cr1_0.room_id=crm1_0.room_id 
+    where
+        crm1_0.user_id=? 
+    order by
+        cr1_0.last_send_dtm desc nulls last

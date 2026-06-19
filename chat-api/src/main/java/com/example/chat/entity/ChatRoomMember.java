@@ -29,4 +29,10 @@ public class ChatRoomMember {
 
     @Column(name = "room_alias")
     private String roomAlias;
+
+    @Column(name = "pinned_yn")
+    private String pinnedYn;
+
+    @Column(name = "pinned_dtm")
+    private LocalDateTime pinnedDtm;
 }

@@ -1,9 +1,10 @@
 package com.example.chat.repository;
 
-import com.example.chat.dto.ChatRoomResponse;
+import com.example.chat.dto.response.ChatRoomResponse;
 import com.example.chat.entity.ChatRoomMember;
 import com.example.chat.entity.ChatRoomMemberId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, ChatRoomMemberId> {
 
     @Query("""
-            SELECT new com.example.chat.dto.ChatRoomResponse(
+            SELECT new com.example.chat.dto.response.ChatRoomResponse(
                 cr.roomId,
                 COALESCE(crm.roomAlias, cr.roomName),
                 cr.roomTypeCd,
@@ -28,4 +29,21 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
             ORDER BY cr.lastSendDtm DESC NULLS LAST
             """)
     List<ChatRoomResponse> findChatRoomsByUserId(@Param("userId") String userId);
-}
+
+
+
+    @Modifying
+    @Query("""
+        UPDATE ChatRoomMember crm
+            SET crm.pinnedYn = :pinnedYn,
+                crm.pinnedDtm = CURRENT_TIMESTAMP
+            WHERE crm.id.userId = :userId
+                AND crm.id.roomId = :roomId
+    """)
+    int updatePinned (
+        @Param("userId") String userid,
+        @Param("roomId") String roomid,
+        @Param("pinnedYn") String pinnedYn
+    );    
+
+}    
