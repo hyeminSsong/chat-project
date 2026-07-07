@@ -1,0 +1,12 @@
+node_modules
+dist
+dist-electron
+.git
+.vscode
+.idea
+chat-api
+electron
+.github
+.claude
+.env
+.env.example

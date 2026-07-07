@@ -1,4 +1,34 @@
+# Gradle
+.gradle/
+build/
+
+# VSCode
+.vscode/
+
+# Node
+node_modules/
+
+# Env
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# React
 node_modules/
 dist/
+
+# Spring
+.gradle/
 build/
+bin/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Env
 .env

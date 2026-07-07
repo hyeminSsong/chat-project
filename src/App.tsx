@@ -1,10 +1,11 @@
-import { useState, useRef } from 'react';
-import { Message, SidebarView } from './types';
+import { useEffect, useState, useRef } from 'react';
+import { ChatRoom, Message, SidebarView } from './types';
 import Sidebar from './components/Sidebar';
 import ChatList from './components/ChatList';
 import ChatWindow from './components/ChatWindow';
 import OrgChart from './components/OrgChart';
 import { chatRooms as initialRooms, messages as initialMessages, users, currentUser } from './data/mockData';
+import { fetchChatRooms, MY_USER_ID } from './api/chatApi';
 import './index.css';
 
 // ── 환경 감지 ─────────────────────────────────────────────────────────────────
@@ -109,11 +110,30 @@ function MainApp() {
   const [sidebarView, setSidebarView] = useState<SidebarView>('chat');
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [messages, setMessages] = useState(initialMessages);
+  const [apiRooms, setApiRooms] = useState<ChatRoom[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [listWidth, setListWidth] = useState(DEFAULT_LIST_WIDTH);
   const resizerRef = useRef<HTMLDivElement>(null);
 
-  // 최신 lastMessage를 반영한 rooms 목록
-  const rooms = initialRooms.map(room => {
+  // 앱 시작 시 API에서 채팅방 목록 로드
+  useEffect(() => {
+    fetchChatRooms(MY_USER_ID)
+      .then(rooms => {
+        setApiRooms(rooms);
+        setLoadError(null);
+      })
+      .catch(err => {
+        console.error('채팅방 로드 실패:', err);
+        setLoadError('채팅방 목록을 불러오지 못했습니다. Spring Boot 서버가 실행 중인지 확인하세요.');
+        // 서버 연결 실패 시 목 데이터로 대체
+        setApiRooms(initialRooms);
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  // 전송된 메시지가 있으면 해당 방의 lastMessage를 최신으로 업데이트
+  const rooms = apiRooms.map(room => {
     const msgs = messages[room.id];
     if (!msgs?.length) return room;
     const last = msgs[msgs.length - 1];
@@ -206,13 +226,23 @@ function MainApp() {
               className={`list-panel${selectedRoom ? '' : ' full'}`}
               style={selectedRoom ? { width: listWidth } : undefined}
             >
-              <ChatList
-                rooms={rooms}
-                users={users}
-                currentUser={currentUser}
-                selectedRoomId={isElectron ? null : selectedRoomId}
-                onSelectRoom={handleSelectRoom}
-              />
+              {isLoading ? (
+                <div style={{ padding: '24px', color: '#888', textAlign: 'center' }}>
+                  채팅방 목록 로딩 중...
+                </div>
+              ) : loadError ? (
+                <div style={{ padding: '16px', color: '#e55', fontSize: '13px' }}>
+                  {loadError}
+                </div>
+              ) : (
+                <ChatList
+                  rooms={rooms}
+                  users={users}
+                  currentUser={currentUser}
+                  selectedRoomId={isElectron ? null : selectedRoomId}
+                  onSelectRoom={handleSelectRoom}
+                />
+              )}
             </div>
 
             {selectedRoom && (

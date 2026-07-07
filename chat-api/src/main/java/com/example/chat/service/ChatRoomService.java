@@ -23,10 +23,11 @@ public class ChatRoomService {
     }
 
     /** 채팅방 고정 */
+    @Transactional
     public void updatePinned(String userId, String roomId, String pinnedYn) {
-    
+
         chatRoomMemberRepository.updatePinned(userId, roomId, pinnedYn);
-    
+
     }
 
 }

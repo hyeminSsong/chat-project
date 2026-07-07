@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: chat-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - chat-network
+
+  backend:
+    build:
+      context: ./chat-api
+    container_name: chat-api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${BACKEND_PORT}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - chat-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chat-front
+    ports:
+      - "${FRONTEND_PORT}:5173"
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+    networks:
+      - chat-network
+
+networks:
+  chat-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

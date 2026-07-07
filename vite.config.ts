@@ -3,7 +3,15 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  // Electron의 file:// 프로토콜에서 정적 에셋이 올바른 상대 경로를 가지도록
-  // 프로덕션 빌드 시에만 './' 사용
-  base: process.env.ELECTRON_BUILD ? './' : '/chat-project/',
+  base: process.env.ELECTRON_BUILD ? './' : '/',
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://backend:8080',
+        changeOrigin: true,
+      },
+    },
+  },
 });
